@@ -581,6 +581,7 @@ module StreetAddress
         :direct_regexp, 
         :zip_regexp,
         :corner_regexp,
+        :corner_match_regexp,
         :unit_regexp,
         :street_regexp,
         :place_regexp,
@@ -614,6 +615,7 @@ module StreetAddress
         [Regexp::quote(f), Regexp::quote(x)] 
       }.join("|")
     self.zip_regexp = '(\d{5})(?:-?(\d{4})?)'
+    self.corner_match_regexp = '^[^\d]+.*(?:\band\b|\bat\b|&|\@)'
     self.corner_regexp = '(?:\band\b|\bat\b|&|\@)'
     self.unit_regexp = '(?:(su?i?te|p\W*[om]\W*b(?:ox)?|dept|apt|apartment|ro*m|fl|unit|box)\W+|\#\W*)([\w-]+)'
     self.street_regexp = 
@@ -668,7 +670,7 @@ module StreetAddress
     
     self.complete_informal_regexp = Regexp.new(informal_address_regexp, Regexp::IGNORECASE + Regexp::EXTENDED)
     
-    self.complete_corner_regexp = Regexp.new(corner_regexp, Regexp::IGNORECASE)
+    self.complete_corner_regexp = Regexp.new(corner_match_regexp, Regexp::IGNORECASE)
 
 =begin rdoc
 

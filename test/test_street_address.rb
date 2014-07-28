@@ -1,5 +1,5 @@
 require 'test/unit'
-require 'street_address'
+require File.expand_path('../../lib/street_address.rb', __FILE__)
 
 
 class StreetAddressUsTest < Test::Unit::TestCase
@@ -10,6 +10,7 @@ class StreetAddressUsTest < Test::Unit::TestCase
     @addr4 = "1005 Gravenstein Hwy N, Sebastopol CA 95472"
     @addr5 = "PO BOX 450, Chicago IL 60657"
     @addr6 = "2730 S Veitch St #207, Arlington, VA 22206"
+    @addr7 = "2730 S Hollywood and Vine St, Arlington, VA 22206"
 
     @int1 = "Hollywood & Vine, Los Angeles, CA"
     @int2 = "Hollywood Blvd and Vine St, Los Angeles, CA"
@@ -97,7 +98,6 @@ class StreetAddressUsTest < Test::Unit::TestCase
     assert_equal addr.street2, nil
 
 
- 
     addr = StreetAddress::US.parse(@addr4)
     assert_equal addr.number, "1005"
     assert_equal addr.postal_code, "95472"
@@ -114,10 +114,22 @@ class StreetAddressUsTest < Test::Unit::TestCase
   
     addr = StreetAddress::US.parse(@addr5)
     assert_equal addr, nil
-    
-    
+
     addr = StreetAddress::US.parse(@addr6)
     assert_equal("207", addr.unit)
+
+    # "2730 S Hollywood and Vine St, Arlington, VA 22206"
+    addr = StreetAddress::US.parse(@addr7)
+    assert_equal addr.postal_code, "22206"
+    assert_equal addr.prefix, "S"
+    assert_equal addr.state, "VA"
+    assert_equal addr.street, "Hollywood And Vine"
+    assert_equal addr.street_type, "St"
+    assert_equal addr.unit, nil
+    assert_equal addr.unit_prefix, nil
+    assert_equal addr.city, "Arlington"
+    assert_equal addr.street2, nil
+    assert_equal addr.suffix, nil
 
     addr = StreetAddress::US.parse(@int1)
     assert_equal addr.city, "Los Angeles"
